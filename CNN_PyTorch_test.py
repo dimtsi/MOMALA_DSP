@@ -30,7 +30,7 @@ from torchvision import transforms
 
 
 import re
-print('sobel_only')
+print('both')
 label_types = ['white_blood_cell','debris','malariae', 'falciparum', 'ovale']
 
 def create_df(dir_name):
@@ -93,12 +93,12 @@ for filename in test_labels_df['image'].values: ##to keep mapping with classes
 
 
 X_train = []
-# X_train.extend(train_PIL_images)
+X_train.extend(train_PIL_images)
 X_train.extend(train_PIL_images_sobel)
 
 
 Y_train = []
-# Y_train.extend(train_labels)
+Y_train.extend(train_labels)
 Y_train.extend(train_labels_sobel)
 len(Y_train)
 
@@ -286,7 +286,7 @@ def augment_and_transform_for_prediction(im):
 
     sobel_images = []
     for im in augmented_image_list:
-        # sobel_images.append(apply_gamma(im))
+        sobel_images.append(apply_gamma(im))
         sobel_images.append(apply_sobel(im))
 
     augmented_image_list.extend(sobel_images)
