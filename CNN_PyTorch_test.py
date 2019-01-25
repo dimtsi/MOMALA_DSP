@@ -67,8 +67,8 @@ label_types.index('ovale')
 # train_labels_df = pd.read_csv('original_train.csv')
 # test_labels_df = pd.read_csv('original_test.csv')
 
-train_PIL_images = [] 
-test_PIL_images = [] 
+train_PIL_images = []
+test_PIL_images = []
 
 train_PIL_images_sobel = []
 train_labels_sobel = []
@@ -79,11 +79,11 @@ test_labels = []
 for filename in train_labels_df['image'].values: ##to keep mapping with classes
     train_PIL_images.append(Image.open('split_gamma_0.5/train/'+filename).copy())
     train_labels.append(train_labels_df.loc[train_labels_df['image'] == filename, 'class'].iloc[0])
-    
+
 for filename in train_labels_df_sobel['image'].values: ##to keep mapping with classes
     train_PIL_images_sobel.append(Image.open('splitSobel/train/'+filename).copy())
     train_labels_sobel.append(train_labels_df_sobel.loc[train_labels_df_sobel['image'] == filename, 'class'].iloc[0])
-    
+
 for filename in test_labels_df['image'].values: ##to keep mapping with classes
     test_PIL_images.append(Image.open('split/test/'+filename).copy())
     test_labels.append(test_labels_df.loc[test_labels_df['image'] == filename, 'class'].iloc[0])
@@ -116,13 +116,13 @@ test_labels_df['class'].value_counts()
 # In[6]:
 
 
-"""Custom Datasets that obtain lists of PIL Images 
+"""Custom Datasets that obtain lists of PIL Images
 and labels as input
 """
 
 class ListsTrainDataset(Dataset):
     def __init__(self, list_of_images, list_of_labels, transform=None):
-        
+
         self.data = list_of_images
         self.labels = np.asarray(list_of_labels).reshape(-1,1)
         self.transform = transform
@@ -217,7 +217,7 @@ def apply_sobel(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = cv2.filter2D(image, -1, kernel_vert)
     image = cv2.filter2D(image, -1, kernel_horz)
-    
+
     return image
 
 def apply_gamma(image, gamma=0.5):
@@ -243,7 +243,7 @@ def apply_sobel(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image = cv2.filter2D(image, -1, kernel_vert)
     image = cv2.filter2D(image, -1, kernel_horz)
-    
+
     return image
 
 def apply_gamma(image, gamma=0.5):
@@ -265,12 +265,12 @@ from skimage.transform import rescale, resize
 
 
 def augment_and_transform_for_prediction(im):
-    
+
     num_of_rotations = 5
-    
+
     im = transforms.ToPILImage()(im.squeeze())
     im = np.array(im)
-    
+
     augmented_image_list = list()
     augmented_image_list.append(im) ##original
     ##augment
@@ -289,7 +289,7 @@ def augment_and_transform_for_prediction(im):
     sobel_images = []
     for im in augmented_image_list:
         sobel_images.append(apply_gamma(im))
-        sobel_images.append(apply_sobel(im))
+        # sobel_images.append(apply_sobel(im))
 
     augmented_image_list.extend(sobel_images)
 
@@ -406,7 +406,7 @@ def train_and_validate(model, train_loader, test_loader,
             augmented_images = Variable(augmented_images).to(device)
             labels = labels.squeeze(1)
             outputs = model(augmented_images)
-            
+
             probabilities = torch.exp(nn.LogSoftmax()(outputs))
             predicted = torch.argmax(torch.mean(probabilities, 0))
 
@@ -530,7 +530,7 @@ for images, labels in test_loader:
 # #     print(total)
 #     correct += (predicted.cpu().long() == labels).sum()
 # #     print(correct)
-    
+
 #     total_labels = torch.cat((total_labels,labels))
 #     total_predicted = torch.cat((total_predicted, predicted.cpu().long().unsqueeze(dim = 0)))
 
@@ -593,7 +593,7 @@ def create_diagnosis(x):
         return 0
     else:
         return 1
-        
+
 actual_infection = results_df.label.apply(lambda s: pd.Series({'infection': create_diagnosis(s)}))
 predicted_infection = results_df.prediction.apply(lambda s: pd.Series({'pred_infection': create_diagnosis(s)}))
 
@@ -648,4 +648,3 @@ print('precision: {}, sensitivity: {}, specificity: {}'.format(precision, sensit
 
 # # scipy.misc.imsave('im.png', new)
 # plt.imshow(new)
-
