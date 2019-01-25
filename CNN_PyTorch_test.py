@@ -481,7 +481,7 @@ cnn = ResNetDynamic(Bottleneck, [3, 4, 6, 3],
             num_layers = 2, pretrained_nn = None)
 
 trained_model = train_and_validate(cnn, train_loader, test_loader,
-                                   num_epochs=1,
+                                   num_epochs=10,
                                    learning_rate = 0.0001,
                                    weight_decay = 0,
                                    device = device,
