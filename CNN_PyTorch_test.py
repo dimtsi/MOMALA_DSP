@@ -481,7 +481,7 @@ cnn = ResNetDynamic(Bottleneck, [3, 4, 6, 3],
             num_layers = 2, pretrained_nn = None)
 
 trained_model = train_and_validate(cnn, train_loader, test_loader,
-                                   num_epochs=10,
+                                   num_epochs=1,
                                    learning_rate = 0.0001,
                                    weight_decay = 0,
                                    device = device,
@@ -540,7 +540,7 @@ for images, labels in test_loader:
 # In[ ]:
 
 
-total_predicted
+# total_predicted
 
 
 # In[ ]:
@@ -611,7 +611,6 @@ final.pred_infection.value_counts()
 # In[80]:
 
 
-print((TN, FP, FN, TP))
 
 
 # In[67]:
@@ -622,11 +621,11 @@ from sklearn.metrics import confusion_matrix, classification_report
 cf = confusion_matrix(final.infection, final.pred_infection)
 print(cf)
 
-
 # In[78]:
 
 
 TN, FP, FN, TP = cf.ravel()
+print((TN, FP, FN, TP))
 
 sensitivity = TP/(TP+FN)
 specificity = TN/(TN+FP)
